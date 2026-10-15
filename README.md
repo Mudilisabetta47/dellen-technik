@@ -17,8 +17,30 @@ npm test             # Vitest: Inhalte, NAP, Sitemap, robots, JSON-LD
 npm run test:crawl   # nach `npm run build`: startet den Server und crawlt alle Seiten
 ```
 
-Hosting: Node-Host (z. B. Vercel). Es gibt bewusst **keinen** statischen Export – 301-Weiterleitungen und Header
-laufen über `next.config.mjs`.
+Hosting: **Cloudflare Workers** (über den OpenNext-Adapter) – oder jeder Node-Host wie Vercel. Es gibt bewusst **keinen** statischen
+Export – 301-Weiterleitungen und Header laufen über `next.config.mjs`.
+
+## Deployment auf Cloudflare Workers
+
+Dateien: `wrangler.jsonc`, `open-next.config.ts`. Alle Seiten sind vorgerendert und werden aus den Worker-Assets ausgeliefert
+(kein KV/R2/Datenbank). Bilder optimiert Cloudflare über das `IMAGES`-Binding (AVIF/WebP).
+
+```bash
+npm run preview     # Build + lokale Vorschau in der Workers-Runtime (http://localhost:8787)
+npm run deploy      # Build + Deploy (braucht `npx wrangler login`)
+CRAWL_BASE=http://localhost:8787 npm run test:crawl   # Crawl/SEO-Test gegen die Vorschau
+```
+
+**Automatisch aus GitHub (Workers Builds):** Cloudflare-Dashboard → Workers & Pages → *Create* → *Import a repository* → `dellen-technik`.
+- Build command: `npx opennextjs-cloudflare build`
+- Deploy command: `npx wrangler deploy`
+- Umgebungsvariable `NODE_VERSION` = `22` (zusätzlich liegt `.node-version` im Repo)
+- Der Worker-Name im Dashboard muss `dellen-technik` lauten (wie in `wrangler.jsonc`).
+
+**Domain:** Worker → *Settings → Domains & Routes → Add → Custom Domain*: `dellentechnik-lilienthal.de` (und `www`). Da die Domain schon in
+Cloudflare liegt, legt Cloudflare DNS-Eintrag und Zertifikat selbst an. Alte Lovable-A-/TXT-Einträge vorher löschen.
+`www` → Hauptdomain: *Rules → Redirect Rules* (301, Hostname `www.dellentechnik-lilienthal.de` → `https://dellentechnik-lilienthal.de` mit Pfad beibehalten).
+Der Canonical im Code ist die Variante **ohne** www.
 
 ## Struktur
 

@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dellen-technik",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": { "enabled": true }
+  // Eigene Domain: im Cloudflare-Dashboard unter Workers → dellen-technik → Settings → Domains & Routes
+  // "Custom Domain" hinzufügen (dellentechnik-lilienthal.de und www.dellentechnik-lilienthal.de), oder hier eintragen:
+  // "routes": [
+  //   { "pattern": "dellentechnik-lilienthal.de", "custom_domain": true },
+  //   { "pattern": "www.dellentechnik-lilienthal.de", "custom_domain": true }
+  // ]
+}

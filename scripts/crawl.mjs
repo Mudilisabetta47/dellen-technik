@@ -7,16 +7,18 @@
 import { spawn } from 'node:child_process';
 
 const PORT = process.env.CRAWL_PORT ?? '3222';
-const BASE = `http://localhost:${PORT}`;
+// CRAWL_BASE=http://localhost:8799 prüft einen bereits laufenden Server (z. B. `npm run preview` für Cloudflare Workers).
+const EXTERNAL = process.env.CRAWL_BASE;
+const BASE = EXTERNAL ?? `http://localhost:${PORT}`;
 const SITE = 'https://dellentechnik-lilienthal.de';
 const failures = [];
 const fail = (msg) => failures.push(msg);
 const ok = (cond, msg) => cond || fail(msg);
 
-const server = spawn('npx', ['next', 'start', '-p', PORT], { stdio: ['ignore', 'pipe', 'pipe'] });
+const server = EXTERNAL ? null : spawn('npx', ['next', 'start', '-p', PORT], { stdio: ['ignore', 'pipe', 'pipe'] });
 let out = '';
-server.stdout.on('data', (d) => (out += d));
-server.stderr.on('data', (d) => (out += d));
+server?.stdout.on('data', (d) => (out += d));
+server?.stderr.on('data', (d) => (out += d));
 
 async function waitReady() {
   for (let i = 0; i < 60; i++) {
@@ -154,7 +156,7 @@ try {
 } catch (e) {
   fail(String(e));
 } finally {
-  server.kill('SIGTERM');
+  server?.kill('SIGTERM');
 }
 
 if (failures.length) {

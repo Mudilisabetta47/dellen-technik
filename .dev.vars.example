@@ -1,0 +1,2 @@
+# Nur für lokale Previews (`npm run preview`). Keine Geheimnisse nötig.
+NEXTJS_ENV=development
