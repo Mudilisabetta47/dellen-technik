@@ -203,7 +203,7 @@ Dann passiert automatisch: `sameAs` (Organization + LocalBusiness), `hasMap` sow
 ## 15. Prüfen vor Livegang
 
 ```bash
-npm run build && npm run lint && npm run typecheck && npm test && npm run test:crawl
+npm run build:next && npm run lint && npm run typecheck && npm test && npm run test:crawl
 ```
 `test:crawl` startet den Produktionsserver und prüft: Status aller Sitemap-URLs, Canonicals, Title/Description/OG/Twitter, genau eine H1, JSON-LD, interne Verlinkung im Hauptinhalt,
 Waisenseiten, `nofollow`, Bilder (alt, Erreichbarkeit), 404, 301-Weiterleitungen, robots.txt.

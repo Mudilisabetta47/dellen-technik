@@ -9,8 +9,9 @@ und eine skalierbare lokale SEO-Architektur.
 ```bash
 npm install
 npm run dev          # http://localhost:3000
-npm run build        # Produktions-Build
-npm run start        # Produktionsserver
+npm run build        # Produktions-Build für Cloudflare Workers (erzeugt .open-next/)
+npm run build:next   # nur `next build` (ohne Worker, z. B. für `npm run start` und `npm run test:crawl`)
+npm run start        # Produktionsserver (nach `build:next`)
 npm run lint
 npm run typecheck
 npm test             # Vitest: Inhalte, NAP, Sitemap, robots, JSON-LD
@@ -29,10 +30,11 @@ Dateien: `wrangler.jsonc`, `open-next.config.ts`. Alle Seiten sind vorgerendert 
 npm run preview     # Build + lokale Vorschau in der Workers-Runtime (http://localhost:8787)
 npm run deploy      # Build + Deploy (braucht `npx wrangler login`)
 CRAWL_BASE=http://localhost:8787 npm run test:crawl   # Crawl/SEO-Test gegen die Vorschau
+npm run build:next && npm run test:crawl              # Crawl/SEO-Test mit eigenem `next start`
 ```
 
 **Automatisch aus GitHub (Workers Builds):** Cloudflare-Dashboard → Workers & Pages → *Create* → *Import a repository* → `dellen-technik`.
-- Build command: `npx opennextjs-cloudflare build`
+- Build command: `npm run build` (Standard; führt den OpenNext-Build aus)
 - Deploy command: `npx wrangler deploy`
 - Umgebungsvariable `NODE_VERSION` = `22` (zusätzlich liegt `.node-version` im Repo)
 - Der Worker-Name im Dashboard muss `dellen-technik` lauten (wie in `wrangler.jsonc`).
